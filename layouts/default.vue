@@ -99,19 +99,33 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Home',
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
+          icon: 'mdi-book',
+          title: 'Livros',
+          to: '/livros'
+        },
+        {
+          icon: 'mdi-blur',
+          title: 'Categorias',
+          to: '/categorias'
+        },{
+          icon: 'mdi-deathly-hallows',
+          title: 'Autores',
+          to: '/autores'
+        },
+        {
+          icon: 'mdi-pirate',
+          title: 'Usuários',
+          to: '/usuarios'
+        },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Biblioteca'
     }
   }
 }
