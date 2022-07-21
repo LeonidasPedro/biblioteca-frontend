@@ -81,6 +81,7 @@ export default {
   methods: {
     async getUsuarios () {
       this.usuarios = await this.$axios.$get('http://localhost:3333/usuarios');
+      
     }
   }
 }

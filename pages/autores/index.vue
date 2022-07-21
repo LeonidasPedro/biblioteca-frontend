@@ -15,7 +15,7 @@
         <v-col>
           <v-btn
             style="
-            margin-left: -65%"
+            margin-left: -80%"
             outlined
             to="/autores/cadastro"
           >
@@ -59,6 +59,7 @@ export default {
           sortable: false,
           value: 'email',
         },
+        { text: "", value:"actions" } 
       ],
       autores: []
     }
@@ -73,3 +74,4 @@ export default {
   }
 }
 </script>
+ 

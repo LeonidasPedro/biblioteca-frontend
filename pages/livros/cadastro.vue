@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h1>Cadastrar Livro</h1>
-    <hr>
+    <h1>Cadastro de Livros</h1>
+    <hr><br>
     <v-form>
       <v-container>
         <v-row>
@@ -17,42 +17,50 @@
             />
           </v-col>
         </v-row>
+          <v-row>
+          <v-col
+            cols="3"
+          >
+            <v-autocomplete
+              v-model="livro.idAutor"
+              :items="autores"
+              outlined
+              label="Autor"
+              item-text="nome"
+              item-value="id"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <v-col
+            cols="3"
+          >
+            <v-autocomplete
+              style="
+              margin-left: -6%"
+              v-model="livro.idCategoria"
+              :items="categorias"
+              outlined
+              label="Categoria"
+              item-text="nome"
+              item-value="id"
+            ></v-autocomplete>
+          </v-col>
         <v-row>
           <v-col>
             <v-text-field
               v-model="livro.titulo"
-              placeholder="Titulo"
-              label="titulo"
+              placeholder="Título"
+              label="Título"
               outlined
             />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <v-text-field
+            <v-textarea
               v-model="livro.sinopse"
               placeholder="Sinopse"
-              label="sinopse"
-              outlined
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="livro.idCategoria"
-              placeholder="Código da categoria"
-              label="Id da categoria"
-              outlined
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="livro.idAutor"
-              placeholder="Id do autor"
-              label="Id do autor"
+              label="Sinopse"
               outlined
             />
           </v-col>
@@ -82,27 +90,35 @@ export default {
       livro: {
         id: null,
         titulo: null,
-        sinopse:null,
-        idCategoria:null,
-        idAutor:null
-
-      }
+        sinopse: null,
+        idCategoria: null,
+        idAutor: null
+      },
+      categorias: [],
+      autores: []
     }
   },
-  created (){
-    
+  created () {
+    this.getAutores();
+    this.getCategorias();
   },
   methods: {
     async cadastrar () {
-       let livro = {
-        nome: this.livro.titulo
+      let livro = {
+        titulo: this.livro.titulo,
+        sinopse: this.livro.sinopse,
+        idCategoria: this.livro.idCategoria,
+        idAutor: this.livro.idAutor
       };
       let response = await this.$axios.$post('http://localhost:3333/livros', livro);
       console.log(response);
-      confirm('Cadastrar novo livro?') ? location.reload():location.href = 'http://localhost:3000/livros'
-
     },
-
+    async getAutores () {
+      this.autores = await this.$axios.$get('http://localhost:3333/autores');
+    },
+    async getCategorias () {
+      this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
+    }
   }
 }
 </script>

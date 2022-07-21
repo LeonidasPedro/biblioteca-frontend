@@ -103,7 +103,7 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-book',
+          icon: 'mdi-book-open-page-variant',
           title: 'Livros',
           to: '/livros'
         },
@@ -112,12 +112,12 @@ export default {
           title: 'Categorias',
           to: '/categorias'
         },{
-          icon: 'mdi-deathly-hallows',
+          icon: 'mdi-draw-pen',
           title: 'Autores',
           to: '/autores'
         },
         {
-          icon: 'mdi-pirate',
+          icon: 'mdi-account',
           title: 'Usuários',
           to: '/usuarios'
         },

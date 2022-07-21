@@ -62,14 +62,15 @@ export default {
       autor: {
         id: null,
         nome: null,
-        email:null
+        email:null,
       }
     }
   },
   methods: {
     async cadastrar () {
       let autor = {
-        nome: this.autor.nome
+        nome: this.autor.nome,
+        email: this.autor.email
       };
       let response = await this.$axios.$post('http://localhost:3333/autores', autor);
       console.log(response);

@@ -15,7 +15,7 @@
         <v-col>
           <v-btn
             style="
-            margin-left: -65%"
+            margin-left: -80%"
             outlined
             to="/categorias/cadastro"
           >
@@ -30,7 +30,31 @@
         :items="categorias"
         :items-per-page="10"
         class="elevation-1"
-      ></v-data-table>
+      >
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="editItem(item)"
+        >
+         mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+        mdi-delete
+         </v-icon>
+      </template>
+<template v-slot:no-data>
+  <v-btn
+    color="primary"
+    @click="initialize"
+  >
+    Reset
+  </v-btn>
+</template>
+      </v-data-table>
     </v-container>
   </v-container>
 </template>
@@ -53,6 +77,7 @@ export default {
           sortable: false,
           value: 'nome',
         },
+        { text: "", value: "actions" }
       ],
       categorias: []
     }
@@ -63,7 +88,19 @@ export default {
   methods: {
     async getCategorias () {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
-    }
-  }
+    },
+    async deleteItem (categoria){
+      try { 
+         if(confirm(`Deseja deletar a categoria id ${categoria.id} - ${categoria.nome}? `))
+        {
+        let response = await this.$axios.$post('http://localhost:3333/categorias/deletar', { id: categoria.id });
+        this.$toast(response.message)
+        this.getCategorias();
+        }
+      } catch (error) {
+        this.$toast.error("Ocorreu um erro a realizar o cadastro.")
+      }
+      }
+   }
 }
 </script>

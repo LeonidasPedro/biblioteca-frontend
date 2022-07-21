@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Cadastro de usuarioes</h1>
+    <h1>Cadastro de Usuarios</h1>
     <hr>
     <v-form>
       <v-container>
@@ -27,12 +27,32 @@
             />
           </v-col>
         </v-row>
+         <v-row>
+          <v-col>
+            <v-text-field
+              v-model="usuario.cpfcnpj"
+              placeholder="Cpf/cnpj"
+              label="Cpf/cnpj"
+              outlined
+            />
+          </v-col>
+        </v-row>
         <v-row>
           <v-col>
             <v-text-field
               v-model="usuario.email"
               placeholder="Email"
               label="E-mail"
+              outlined
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="usuario.telefone"
+              placeholder="Telefone"
+              label="Telefone"
               outlined
             />
           </v-col>
@@ -62,18 +82,24 @@ export default {
       usuario: {
         id: null,
         nome: null,
-        email:null
+        cpfcnpj:null,
+        email:null,
+        telefone:null
       }
     }
   },
   methods: {
     async cadastrar () {
       let usuario = {
-        nome: this.usuario.nome
+        nome: this.usuario.nome,
+        cpfcnpj: this.usuario.cpfcnpj,
+        email: this.usuario.email,
+        telefone: this.usuario.telefone
+
       };
       let response = await this.$axios.$post('http://localhost:3333/usuarios', usuario);
       console.log(response);
-      confirm('Cadastrar novo usuario?') ? location.reload():location.href = 'http://localhost:3000/usuarios'
+      confirm('Cadastrar novo usuario?') ? location.reload():this.$router.push('/usuarios')
 
     }
   }

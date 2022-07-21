@@ -55,11 +55,18 @@ export default {
           value: 'titulo',
         },
         {
-          text: 'Sinopse',
+          text: 'Autor',
           align: 'center',
           sortable: false,
-          value: 'sinopse',
+          value: 'autor.nome',
         },
+        {
+          text: 'Categoria',
+          align: 'center',
+          sortable: false,
+          value: 'categoria.nome',
+        },
+       
         
       ],
       livros: []
