@@ -15,7 +15,7 @@
         <v-col>
           <v-btn
             style="
-            margin-left: -65%"
+            margin-left: -80%"
             outlined
             to="/usuarios/cadastro"
           >
@@ -30,7 +30,31 @@
         :items="usuarios"
         :items-per-page="10"
         class="elevation-1"
-      ></v-data-table>
+      >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+          mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+          mdi-delete
+          </v-icon>
+        </template>
+        <template v-slot:no-data>
+          <v-btn
+          color="primary"
+          @click="initialize"
+            >
+            Reset
+          </v-btn>
+        </template>
+      </v-data-table>
     </v-container>
   </v-container>
 </template>
@@ -71,6 +95,7 @@ export default {
           sortable: false,
           value: 'cpfcnpj',
         },
+        { text: "", value: "actions" }
       ],
       usuarios: []
     }
@@ -82,6 +107,24 @@ export default {
     async getUsuarios () {
       this.usuarios = await this.$axios.$get('http://localhost:3333/usuarios');
       
+    },
+    async deleteItem (usuario){
+      try { 
+         if(confirm(`Deseja deletar a usuario id ${usuario.id} - ${usuario.nome}? `))
+        {
+        let response = await this.$axios.$post('http://localhost:3333/usuarios/deletar', { id: usuario.id });
+        this.$toast(response.message)
+        this.getUsuarios();
+        }
+      } catch (error) {
+        this.$toast.error("Ocorreu um erro!!!")
+      }
+      },
+    async editItem (usuario){
+      this.$router.push({
+        name: 'usuarios-cadastro',
+        params: { id: usuario.id }
+      });
     }
   }
 }

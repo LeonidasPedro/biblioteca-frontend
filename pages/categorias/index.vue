@@ -87,8 +87,11 @@ export default {
   },
   methods: {
     async getCategorias () {
-      this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
-    },
+    try {
+        this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
+    } catch (error) {
+        this.$toast.error("Ocorreu um erro!!!")
+    } },
     async deleteItem (categoria){
       try { 
          if(confirm(`Deseja deletar a categoria id ${categoria.id} - ${categoria.nome}? `))
@@ -98,9 +101,15 @@ export default {
         this.getCategorias();
         }
       } catch (error) {
-        this.$toast.error("Ocorreu um erro a realizar o cadastro.")
+        this.$toast.error("Ocorreu um erro!!!")
       }
-      }
+      },
+    async editItem (categoria) {
+      this.$router.push({
+        name: 'categorias-cadastro',
+        params: { id: categoria.id }
+      });
+    }
    }
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <v-container>
-
     <h1>Buscar Livro</h1>
     <hr>
     <v-container>
@@ -31,7 +30,31 @@
         :items="livros"
         :items-per-page="10"
         class="elevation-1"
-      ></v-data-table>
+      >
+      <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+          mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+          mdi-delete
+          </v-icon>
+        </template>
+        <template v-slot:no-data>
+          <v-btn
+          color="primary"
+          @click="initialize"
+            >
+            Reset
+          </v-btn>
+        </template>
+      </v-data-table>
     </v-container>
   </v-container>
 </template>
@@ -66,7 +89,7 @@ export default {
           sortable: false,
           value: 'categoria.nome',
         },
-       
+        { text: "", value: "actions" }
         
       ],
       livros: []
@@ -77,8 +100,30 @@ export default {
   },
   methods: {
     async getLivros () {
-      this.livros = await this.$axios.$get('http://localhost:3333/livros/');
-    }
+     try {
+       this.livros = await this.$axios.$get('http://localhost:3333/livros/');
+   
+     } catch (error) {
+        this.$toast.error("Ocorreu um erro!!!")
+     } },
+    async deleteItem (livro){
+      try { 
+         if(confirm(`Deseja deletar a livro id ${livro.id} - ${livro.titulo}? `))
+        {
+        let response = await this.$axios.$post('http://localhost:3333/livros/deletar', { id: livro.id });
+        this.$toast(response.message)
+        this.getLivros();
+        }
+      } catch (error) {
+        this.$toast.error("Ocorreu um erro!!!")
+      }
+      },
+    async editItem (livro) {
+        this.$router.push({
+          name: 'livros-cadastro',
+          params: { id: livro.id }
+        });
+      }
   }
 }
 </script>
