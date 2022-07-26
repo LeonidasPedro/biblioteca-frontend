@@ -126,6 +126,16 @@ export default {
           title: 'Consultar Livro',
           to: '/consultarLivro'
         },
+        {
+          icon: 'mdi-calculator',
+          title: 'Calculadora',
+          to: '/calculadora'
+        },
+        {
+          icon: 'mdi-chevron-up-box',
+          title: 'emprestimos',
+          to: '/emprestimos'
+        },
       ],
       miniVariant: false,
       right: true,
