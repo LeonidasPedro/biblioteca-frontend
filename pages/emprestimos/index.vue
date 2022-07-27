@@ -1,150 +1,140 @@
 <template>
   <v-container>
-    <h1>Cadastro de Livros</h1>
-    <hr><br>
-    <v-form v-model="valid">
-      <v-container>
-        <v-row>
-          <v-col
-            cols="2"
+    <h1>Buscar Emprestimo</h1>
+    <hr>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-btn
+            outlined
+             to="/consultarLivro"
           >
-            <v-text-field
-              v-model="livro.id"
-              placeholder="Código"
-              label="Código"
-              disabled
-              outlined
-            />
-          </v-col>
-        </v-row>
-          <v-row>
-          <v-col
-            cols="3"
+            Pesquisar
+          </v-btn>
+        </v-col>
+        <v-col>
+          <v-btn
+            style="
+            margin-left: -79%"
+            outlined
+            to="/emprestimos/cadastro"
           >
-            <v-autocomplete
-              v-model="livro.idAutor"
-              :items="autores"
-              outlined
-              label="Autor"
-              
-              item-text="nome"
-              item-value="id"
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
-        <v-col
-            cols="3"
+            Cadastrar
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container>
+      <v-data-table
+        :headers="headers"
+        :items="emprestimos"
+        :items-per-page="10"
+        class="elevation-1"
+      >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
           >
-            <v-autocomplete
-              style="
-              margin-left: -6%"
-              v-model="livro.idCategoria"
-              :items="categorias"
-              outlined
-              label="Categoria"
-              item-text="nome"
-              item-value="id"
-            ></v-autocomplete>
-          </v-col>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="livro.titulo"
-              placeholder="Título"
-              label="Título"
-              :rules="rule"
-              outlined
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-textarea
-              v-model="livro.sinopse"
-              placeholder="Sinopse"
-              label="Sinopse"
-              outlined
-            />
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-form>
-    <v-btn
-      outlined
-      to="/livros"
-    >
-      Cancelar
-    </v-btn>
-    <v-btn
-      outlined
-      @click="cadastrar"
-    >
-      Salvar
-    </v-btn>
+          mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+          mdi-delete
+          </v-icon>
+        </template>
+        <template v-slot:no-data>
+          <v-btn
+          color="primary"
+          @click="initialize"
+            >
+            Reset
+          </v-btn>
+        </template>
+      </v-data-table>
+    </v-container>
   </v-container>
 </template>
 
 <script>
 export default {
-  name: 'CadastroLivrosPage',
+  name: 'ConsultaLivrosPage',
   data () {
     return {
-      valid:null,
-      livro: {
-        id: null,
-        titulo: null,
-        sinopse: null,
-        idCategoria: null,
-        idAutor: null
-      },
-      rule: [
-        v => !!v || 'Esse campo é obrigatório'
+      headers: [
+        {
+          text: 'ID', //nome da coluna
+          align: 'center', //alinhamento -centerp, end, start
+          sortable: false, //se permite ordenação dos dados por essa coluna
+          value: 'id', //é o dado que essa coluna vai receber
+        },
+        {
+          text: 'Prazo',
+          align: 'center',
+          sortable: false,
+          value: 'prazo',
+        },
+        {
+          text: 'Usuario ID',
+          align: 'center',
+          sortable: false,
+          value: 'idUsuario',
+        },
+         {
+          text: 'Livros',
+          align: 'center',
+          sortable: false,
+          value: 'livros[0].titulo',
+        },
+         {
+          text: 'Data da Devolucao',
+          align: 'center',
+          sortable: false,
+          value: 'devolucao',
+        },
+
+
+        { text: "", value: "actions" }
+        
       ],
-      categorias: [],
-      autores: []
+      emprestimos: []
     }
   },
   created () {
-    if (this.$route?.params?.id) {
-      this.getById(this.$route.params.id)
-    }
-    this.getAutores();
-    this.getCategorias();
+    this.getEmprestimos()
   },
   methods: {
-     async cadastrar () {
-      try {
-        if (!this.valid) {
-          return this.$toast.warning('Preencha todos os campos obrigatórios')
-        }
-        let livro = {
-          titulo: this.livro.titulo,
-          sinopse: this.livro.sinopse,
-          idCategoria: this.livro.idCategoria,
-          idAutor: this.livro.idAutor
-        };
+    async getEmprestimos () {
+     try {
+       this.emprestimos = await this.$axios.$get('http://localhost:3333/emprestimos/');
+       console.log(this.emprestimos);
+   
+     } catch (error) {
+        this.$toast.error("Ocorreu um erro!!!")
+     } },
 
-        if (!this.livro.id) {
-          await this.$axios.$post('http://localhost:3333/livros', livro);
-            this.$toast.success('Cadastro realizado com sucesso!');
-            return this.$router.push('/livros');
+     async editItem (emprestimo) {
+        this.$router.push({
+          name: 'emprestimos-cadastro',
+          params: { id: emprestimo.id }
+        })},
+
+    async deleteItem (emprestimo){
+      try { 
+         if(confirm(`Deseja deletar o emprestimo id ${emprestimo.id}? `))
+        {
+        let response = await this.$axios.$post('http://localhost:3333/emprestimos/deletar', { id: emprestimo.id });
+        this.$toast(response.message)
+        this.getEmprestimos();
         }
-         await this.$axios.$post(`http://localhost:3333/livros/${this.livro.id}`, livro);
-        this.$toast.success('Cadastro atualizado com sucesso!');
-        return this.$router.push('/livros');
       } catch (error) {
-        console.log("Ocorreu um erro ao cadastrar novo livro");
+        this.$toast.error("Ocorreu um erro!!!")
       }
-    }, 
-    async getAutores () {
-      this.autores = await this.$axios.$get('http://localhost:3333/autores');
     },
-    async getCategorias () {
-      this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
-    },
-    async getById (id) {
-      this.livro = await this.$axios.$get(`http://localhost:3333/livros/${id}`);
-    },
+      
   }
 }
 </script>

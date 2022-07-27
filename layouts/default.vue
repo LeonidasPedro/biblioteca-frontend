@@ -133,7 +133,7 @@ export default {
         },
         {
           icon: 'mdi-chevron-up-box',
-          title: 'emprestimos',
+          title: 'Emprestimos',
           to: '/emprestimos'
         },
       ],
